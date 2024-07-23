@@ -26,7 +26,7 @@ export function IntlReact({
     </IntlReactContext.Provider>
 );
 }
-export function useT(): UseT {
+export function useTranslation(): UseT {
     const { setLocale, ...props } = useContext(IntlReactContext);
     return {
         ...props,
