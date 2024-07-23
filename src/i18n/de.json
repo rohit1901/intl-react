@@ -1,0 +1,24 @@
+{
+  "hello": "Hallo",
+  "feedback": {
+      "error": "Die Verbindung ist fehlgeschlagen",
+      "success": "Die Verbindung war erfolgreich"
+  },
+  "user": {
+      "describe": {
+          "simple": "Du bist __name__",
+          "complex": "Du bist __name__ und du magst __hobby__"
+      }
+  },
+  "idiom": {
+      "sovereign": {
+        "female": "Lang lebe die Königin!",
+        "male": "Lang lebe der König!"
+      }
+  },
+  "message-count": {
+      "zero": "Du hast keine neuen Nachrichten",
+      "one": "Du hast 1 Nachricht",
+      "many": "Du hast __count__ Nachrichten"
+  }
+}

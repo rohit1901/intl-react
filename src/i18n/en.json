@@ -1,0 +1,24 @@
+{
+  "hello": "Hello",
+  "feedback": {
+    "error": "The connection failed",
+    "success": "The connection succeeded"
+  },
+  "user": {
+    "describe": {
+      "simple": "You are __name__",
+      "complex": "You are __name__ and you like __hobby__"
+    }
+  },
+  "idiom": {
+    "sovereign": {
+      "female": "Long live the Queen!",
+      "male": "Long live the King!"
+    }
+  },
+  "message-count": {
+    "zero": "You don't have new messages",
+    "one": "You have 1 message",
+    "many": "You have __count__ messages"
+  }
+}
