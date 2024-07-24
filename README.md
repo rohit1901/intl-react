@@ -1,5 +1,3 @@
-Here's a rephrased and expanded version of the README with additional content and examples:
-
 # intl-react
 
 **intl-react** is a lightweight, powerful i18n provider for React applications. It offers full TypeScript support, autocompletion, zero dependencies, and an intuitive API. Perfect for both web and React Native projects.
