@@ -4,10 +4,10 @@
  * @returns {string} - The browser language
  */
 const getBrowserLanguage = (defaultLanguage: string): string => {
-    if (typeof navigator !== "undefined") {
-        return navigator.language.split("-")[0];
-    }
-    return defaultLanguage;
+  if (typeof navigator !== "undefined") {
+    return navigator.language.split("-")[0];
+  }
+  return defaultLanguage;
 };
 /**
  * Initialize the locale based on the default language and the browser language
@@ -16,9 +16,9 @@ const getBrowserLanguage = (defaultLanguage: string): string => {
  * @returns {string} - The locale
  */
 export const initLocale = (
-    defaultLanguage: string,
-    detectBrowserLanguage: boolean = false
+  defaultLanguage: string,
+  detectBrowserLanguage: boolean = false,
 ): string => {
-    if (detectBrowserLanguage) return getBrowserLanguage(defaultLanguage);
-    return defaultLanguage;
+  if (detectBrowserLanguage) return getBrowserLanguage(defaultLanguage);
+  return defaultLanguage;
 };

@@ -9,3 +9,7 @@ dist
 
 # MacOS
 .DS_Store
+
+# TypeScript
+*.tsbuildinfo
+*.d.ts
