@@ -1,7 +1,7 @@
 import {createContext, useState, useContext, PropsWithChildren} from "react";
-import { initLocale } from "./initLocale.ts";
-import { IntlContext, TParams, IntlProps, UseTranslation } from "./models.ts";
-import { tr } from "./tr.tsx";
+import { initLocale } from "./initLocale";
+import { IntlContext, TParams, IntlProps, UseTranslation } from "./models";
+import { tr } from "./tr";
 export const IntlReactContext = createContext<IntlContext>({
     locale: "",
     setLocale: () => null,

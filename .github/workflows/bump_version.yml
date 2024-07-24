@@ -1,0 +1,54 @@
+name: Bump version, commit and push tag
+# This workflow is triggered on push to a release branch (release/patch, release/minor, release/major).
+# It uses the npm-get-version-action to get the current version from package.json and bumps the version based on the branch name.
+# It also commits the changes made to package.json and pushes the tag to the repository.
+on:
+  push:
+    branches:
+      - 'release/*'
+  workflow_call:
+jobs:
+  bump_version:
+    # Only run if the PR is from a release branch (release/patch, release/minor, release/major)
+    if: ${{ github.ref_name == 'release/patch' || github.ref_name == 'release/minor' || github.ref_name == 'release/major' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 20.x ]
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@v4
+      # Setup node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup Git user
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Check for uncommitted changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Uncommitted changes detected. Committing..."
+            git add .
+            git commit -m "Pre-version bump changes"
+          else
+            echo "Working directory clean. Proceeding with version bump."
+          fi
+
+      - name: Bump version patch
+        if: github.ref == 'refs/heads/release/patch'
+        run: npm run version:patch && git push --follow-tags
+
+      - name: Bump version minor
+        if: github.ref == 'refs/heads/release/minor'
+        run: npm run version:minor && git push --follow-tags
+
+      - name: Bump version major
+        if: github.ref == 'refs/heads/release/major'
+        run: npm run version:major && git push --follow-tags
