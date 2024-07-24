@@ -1,400 +1,271 @@
+Here's a rephrased and expanded version of the README with additional content and examples:
+
 # intl-react
 
-**intl-react** is the lightest i18n provider for React applications. It supports **Typescript**, provides **autocompletion**, has **0 dependencies**, and is very easy to use.
+**intl-react** is a lightweight, powerful i18n provider for React applications. It offers full TypeScript support, autocompletion, zero dependencies, and an intuitive API. Perfect for both web and React Native projects.
 
+## Features
 
-### FEATURES
+- 🌐 Automatic browser language detection
+- 🔢 Smart plural rules for any language
+- 🔄 Dynamic translations with multiple keys
+- 🗂️ Deep nested key access in JSON translation files
+- ⚧️ Gender-aware syntax adaptation
+- 📱 React Native compatibility
+- 💡 TypeScript autocompletion for translation keys
+- 🚀 Performant and lightweight
 
-- Auto-detect browser language
-- Auto-detect plural rules based on any language
-- Dynamic translations with multiple keys
-- Access deeply nested keys in json translations files
-- Adapts syntax to gender
-- Supports React Native
-- Provides typescript autocompletion for your keys (🤘)
-
-<hr/>
-
-### SCREENSHOT
-
-<img width="588" alt="intl-react autocomplete in action" src="https://user-images.githubusercontent.com/43271780/154273252-f0818de8-66d1-4265-9e6f-bebe5bd8b73f.png"></img>
-
-<hr/>
-
-## INSTALLATION
+## Installation
 
 ```bash
-// with npm
+# Using npm
 npm install intl-react
-// with yarn
+
+# Using yarn
 yarn add intl-react
+
+# Using pnpm
+pnpm add intl-react
 ```
-<hr/>
 
-# ADD TRANSLATION FILES
+## Quick Start
 
-- Create your JSON translation files.
-- Surround dynamic values by double underscores: `__dynamicValue__`.
-- To allow automatic plural detection, you will need to pass a `count` parameter to **intl-react**'s translation function. **intl-react** will then chose the right word or sentence between `zero`, `one`, `two`, `few` and `many`.
+1. Create your JSON translation files
+2. Set up the IntlReact provider
+3. Use translations in your components
 
-> 🤓: Some languages have more complex plural rules, that may require these five options to offer a perfect user experience. For instance, Arabic handle `zero`, `one`, `two`, `numbers between 3 and 10` and `numbers over 10` as separate entities. If a language doesn't need all these subtleties - like english - you can only write `zero`, `one` and `many` in the JSON file.
+### 1. Create Translation Files
+
+Example `en.json`:
 
 ```json
 {
-  "hello": "hello",
-  "feedback": {
-    "error": "The connection failed",
-    "success": "The connection succedeed"
+  "greeting": "Hello, __name__!",
+  "items": {
+    "zero": "No items",
+    "one": "One item",
+    "many": "__count__ items"
   },
-  "user": {
-    "describe": {
-      "simple": "You are __name__",
-      "complex": "You are __name__ and you like __hobby__"
-    }
+  "weather": {
+    "hot": "It's __temperature__°C outside. Stay hydrated!",
+    "cold": "It's __temperature__°C outside. Bundle up!"
   },
-  "idiom": {
-    "sovereign": {
-      "female": "Long live the Queen!",
-      "male": "Long live the King!"
-    }
-  },
-  "message-count": {
-        "zero": "you don't have new messages",
-    "one": "you have 1 message",
-    "many": "you have __count__ messages"
-  }
-}
-```
-<hr/>
-
-# SET UP
-
-- In your index file, import your JSON translations
-- Wrap your App with **intl-react**'s `Provider`
-- Pass it your available `languages` and your `defaultLanguage`.
-- You also have the option to let **intl-react** detect browser's language with the prop `detectBrowserLanguage` (see [props](#Available props)).
-
-```javascript
-import * as React from "react";
-import { createRoot } from "react-dom/client";
-import { IntlReact } from "intl-react";
-import App from "./app";
-import en from "./i18n/en.json";
-import fr from "./i18n/fr.json";
-
-const root = createRoot(document.getElementById("root"));
-
-root.render(
-  <IntlReact languages={{ en, fr }} defaultLanguage="en">
-    <App />
-  </IntlReact>
-);
-```
-
-<hr/>
-
-# SIMPLE USAGE
-
-- In any component, import **Talker**'s hook `useT`.
-- Destructure the translation function `T` from `useT`
-- Fetch the desired sentence as if you were directly accessing an object, by adding `.` between each key. Based on the JSON example [above](add-translation-files), we could print the sentence `The connection succedeed` by simply writing `T("feedback.success")`
-
-```javascript
-import React from "react";
-import { useT } from "intl-react";
-
-export default function MyComponent() {
-  const { T } = useT();
-  return (
-    <>
-      <h1>{T("hello")}</h1>
-      <div>{T("feedback.success")}</div>
-    </>
-  );
-}
-```
-
-<hr/>
-
-# DYNAMIC VALUES
-
-- To handle dynamic translations, just add an object with all necessary dynamic values
-- To make it work, you need to surround the dynamic values by double underscores in your [JSON files](Add translation files) (`__dynamicValue__`)
-
-```json
-{
-  "user": {
-    "describe": {
-      "simple": "You are __name__",
-      "complex": "You are __name__ and you like __hobby__"
+  "profile": {
+    "title": {
+      "male": "Mr. __name__",
+      "female": "Ms. __name__"
     }
   }
 }
 ```
 
-```javascript
-import React from "react";
-import { useT } from "intl-react";
+### 2. Set Up Provider
 
-export default function MyComponent() {
-  const { T } = useT();
-  return (
-    <>
-      <h1>{T("user.describe.complex", { name: "joe", hobby: "coding" })}</h1>
-    </>
-  );
-}
-```
-<hr/>
-
-# PLURAL
-
-- To handle plural, just add a `count` property to the object
-- To make it work, you need to provide both `zero`, `one` and `many` values to your JSON files.
-
-```json
-{
-  "message-count": {
-    "zero": "you don't have new messages",
-    "one": "you have 1 message",
-    "many": "you have __count__ messages"
-  }
-}
-```
-
-```javascript
-import React, { useState } from "react";
-import { useT } from "intl-react";
-
-export default function MyComponent() {
-  const { T } = useT();
-  const [count, setCount] = useState(0);
-  return (
-    <>
-      <h1>{T("message-count", { count })}</h1>
-      <button onClick={() => setCount(count + 1)}>+1</button>
-    </>
-  );
-}
-```
-<hr/>
-
-# GENDER
-
-- Some languages have different syntax for masculine and feminine genders.
-- To adapt your sentence accordingly, just pass the param `gender: m` for `male`, or `gender: f` for `female`.
-- To make it work, you need to provide both `male` and `female` values to your JSON files.
-
-```json
-{
-  "idiom": {
-    "sovereign": {
-      "female": "Long live the Queen!",
-      "male": "Long live the King!"
-    }
-  }
-}
-```
-
-```javascript
-import React from "react";
-import { useT } from "intl-react";
-
-export default function MyComponent() {
-  const { T } = useT();
-  return (
-    <>
-      <h1>{T("idiom.sovereign", { gender: "m" })}</h1>
-    </>
-  );
-}
-```
-
-<hr/>
-
-# LOCALE
-
-- Access and update the locale by using the hook `useT()`
-- If the provided locale doesn't match any JSON translation files, **intl-react** will use the `defaultLanguage` sent to the provider.
-
-```javascript
-import React, { useState } from "react";
-import { useT } from "intl-react";
-
-export default function MyComponent() {
-  const { T, setLocale, locale } = useT();
-  return (
-    <>
-      <h1>{T("hello")}</h1>
-      <p>{locale}</p>
-      <button onClick={() => setLocale("fr")}>speak french</button>
-    </>
-  );
-}
-```
-
-<hr/>
-
-<a name='autocomplete'></a>
-
-# AUTOCOMPLETION
-
-Autocompletion for translation keys is available in Typescript projects. Because json must be parsed at **compile time**, you will need to create your own `useAutocompleteT` hook with **intl-react**'s `Autocomplete` type wrapper.
-
-Here's how to do it:
-
-- Make sure you use `Typescript >=4.5.5` (we don't guarantee it will work on older versions)
-- Create a `translate.tsx` file anywhere in your app(`translate.tsx` can be named as you want)
-- Import your main language JSON translation (ex: `en.json`)
-- Instantiate autocompletion with **intl-react's** `Autocomplete`
-- Export a `useAutocompleteT` hook around **intl-react**'s `useT()`
-
-```typescript
-import { useT, Autocomplete, TParams, tr } from "intl-react";
-import en from "./en.json";
-
-type Key = Autocomplete<typeof en>;
-
-export const useAutocompleteT = () => {
-  const { locale, languages, defaultLanguage } = useT();
-  return {
-    T: (key: Key, params?: TParams) =>
-      tr({ locale, languages, defaultLanguage }, key, params),
-  };
-};
-```
-
-If you prefer to keep the `useT` naming, just write:
-
-```ts
-import { useT as useTr, Autocomplete, TParams, tr } from "intl-react";
-import en from "./en.json";
-
-type Key = Autocomplete<typeof en>;
-
-export const useT = () => {
-  const { locale, languages, defaultLanguage } = useTr();
-  return {
-    T: (key: Key, params?: TParams) =>
-      tr({ locale, languages, defaultLanguage }, key, params),
-  };
-};
-```
-
-# Autocomplete usage
-
-You now have the choice between using your own `useAutocompleteT` hook - which provides real-time autocompletion - or using **intl-react**'s `useT` - which doesn't provide autocompletion - in your app.
-
-```js
-import { useAutocompleteT } from "./translate";
+```jsx
+import React from 'react';
+import { IntlReact } from 'intl-react';
+import en from './locales/en.json';
+import es from './locales/es.json';
 
 function App() {
-  const { T } = useAutocompleteT();
   return (
-    <>
-      <h1>{T("feedback.success")}</h1>
-      <h4>{T("user.describe.complex", { name: "joe", hobby: "coding" })}</h4>
-    </>
+    <IntlReact 
+      languages={{ en, es }} 
+      defaultLanguage="en"
+      detectBrowserLanguage={true}
+    >
+      <YourApp />
+    </IntlReact>
+  );
+}
+
+export default App;
+```
+
+### 3. Use Translations
+
+```jsx
+import React from 'react';
+import { useTranslation } from 'intl-react';
+
+function Welcome() {
+  const { T, setLocale, locale } = useTranslation();
+
+  return (
+    <div>
+      <h1>{T('greeting', { name: 'Alice' })}</h1>
+      <p>{T('items', { count: 5 })}</p>
+      <p>{T('weather.hot', { temperature: 30 })}</p>
+      <p>{T('profile.title', { name: 'Johnson', gender: 'male' })}</p>
+      
+      <p>Current language: {locale}</p>
+      <button onClick={() => setLocale('es')}>Switch to Spanish</button>
+    </div>
   );
 }
 ```
 
-> 🤓 Pro-tip: since you will need to import `useAutocompleteT` from `translate.tsx`, it is highly recommended to add an alias `translate` to your builder's config and `tsconfig.json`.
+## Advanced Usage
 
-This will allow you to write
+### Dynamic Values
 
-```ts
-import { useAutocompleteT } from "translate" 
+Use double underscores to denote dynamic values in your translations:
+
+```json
+{
+  "welcome": "Welcome to __city__, __name__!"
+}
 ```
 
-instead of
-
-```ts
-import { useAutocompleteT } from "../../translate" 
+```jsx
+T('welcome', { city: 'Paris', name: 'Alice' })
 ```
 
-> **Exemples:**
-> webpack
->
-> ```
-> resolve: {
->   extensions: [".ts", ".tsx", ".js", "jsx", ".json"],
->   alias: {
->       translate: path.resolve(__dirname, "src/translate/"),
->  }
-> ```
->
-> tsconfig
->
-> ```
-> { "compilerOptions": {
->   "paths": {
->   "translate/*": ["src/translate/*"]
->   }
-> }}
-> ```
->
-> for other bundlers, please refer to their respective documentations.
+### Pluralization
 
-<hr/>
+Use `zero`, `one`, and `many` keys for pluralization:
 
-# REACT NATIVE
+```json
+{
+  "apples": {
+    "zero": "No apples",
+    "one": "One apple",
+    "many": "__count__ apples"
+  }
+}
+```
 
-- Add your provider directly in App.(js|tsx)
+```jsx
+T('apples', { count: 0 })  // "No apples"
+T('apples', { count: 1 })  // "One apple"
+T('apples', { count: 5 })  // "5 apples"
+```
 
-```tsx
-import { StyleSheet, Text, View } from "react-native";
-import { IntlReact } from "intl-react";
-import en from "./src/i18n/en.json";
-import fr from "./src/i18n/fr.json";
-import MyComponent from "./src/MyComponent";
+### Gender-Aware Translations
+
+Use `male` and `female` keys for gender-specific translations:
+
+```json
+{
+  "greeting": {
+    "male": "Welcome, Mr. __name__",
+    "female": "Welcome, Ms. __name__"
+  }
+}
+```
+
+```jsx
+T('greeting', { name: 'Smith', gender: 'male' })
+T('greeting', { name: 'Johnson', gender: 'female' })
+```
+
+### Locale Management
+
+```jsx
+const { setLocale, locale } = useTranslation();
+
+// Get current locale
+console.log(locale);
+
+// Change locale
+setLocale('fr');
+```
+
+## React Native Support
+
+intl-react works seamlessly with React Native. Just wrap your app with the provider:
+
+```jsx
+import { IntlReact } from 'intl-react';
+import en from './locales/en.json';
+import fr from './locales/fr.json';
 
 export default function App() {
   return (
     <IntlReact languages={{ en, fr }} defaultLanguage="en">
-      <View style={styles.container}>
-        <MyComponent />
-      </View>
+      <NavigationContainer>{/* ... */}</NavigationContainer>
     </IntlReact>
   );
 }
 ```
 
-- All the exemples above are valid in React Native. You only have to replace html tags (`div`, `h1`, etc.) by `Text`.
-- Since `Intl` api is not available in React Native, the `count` param will only return three types of plural keys: `zero`, `one` and `many`. Please adjust your json files accordingly.
+Then use it in your components:
 
-```javascript
-import React, { Text, Button } from "react-native";
-import { useState } from "react";
-import { useT } from "intl-react";
+```jsx
+import { useTranslation } from 'intl-react';
+import { Text, Button } from 'react-native';
 
-export default function MyComponent() {
-  const { T } = useT();
-  const [count, setCount] = useState(0);
+function MyScreen() {
+  const { T, setLocale } = useTranslation();
 
   return (
     <>
-      <Text>{T("hello")}</Text>
-      <Text>
-        {T("user.describe.complex", { name: "joe", hobby: "coding" })}
-      </Text>
-      <Text>{T("message-count", { count })}</Text>
-      <Button onPress={() => setCount(count + 1)} title="+1" />
+      <Text>{T('greeting', { name: 'User' })}</Text>
+      <Button title="Switch to French" onPress={() => setLocale('fr')} />
     </>
   );
 }
 ```
 
-<hr/>
+## TypeScript and Autocompletion
 
-# AVAILABLE PROPS
+For TypeScript projects, create a custom hook for autocompletion:
 
-You can pass these props to **intl-react**'s provider
+```typescript
+// translate.ts
+import { useTranslation as useIntlT, Autocomplete, TParams, tr } from 'intl-react';
+import en from './locales/en.json';
 
-| |Type |Role |
-|----------------|-------------------------------|-----------------------------|
-|languages |`object` |object containing all your json files. Typical format: `{en: {...}, fr: {...}}` |
-|defaultLanguage |`string` |default language of your app (a similar key must be included in the `language` prop) |
-|detectBrowserLanguage |`boolean`|if `true`, **intl-react** will automatically use browser language and override the `defaultLanguage`. If the browser language is not included in your available translations, it will switch back to `defaultLanguage`. Not available in React Native. Use `expo-localization` to fetch the default user locale instead.|
+type Key = Autocomplete<typeof en>;
 
-> 🤓: The auto-detect language feature will always return a simple key such as 'fr' instead of 'fr_FR'. Keep things simple and always declare your languages with 2 letters.
+export const useTranslation = () => {
+  const { locale, languages, defaultLanguage } = useIntlT();
+  return {
+    T: (key: Key, params?: TParams) =>
+      tr({ locale, languages, defaultLanguage }, key, params),
+    setLocale: useIntlT().setLocale,
+    locale: useIntlT().locale,
+  };
+};
+```
+
+Now use your custom hook for autocompletion:
+
+```tsx
+import { useTranslation } from './translate';
+
+function MyComponent() {
+  const { T } = useTranslation();
+  return <h1>{T('greeting', { name: 'World' })}</h1>;
+}
+```
+
+## API Reference
+
+### IntlReact Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `languages` | `object` | Object containing all translation JSON files |
+| `defaultLanguage` | `string` | Default language code |
+| `detectBrowserLanguage` | `boolean` | Automatically detect and use browser language |
+
+### useTranslation Hook
+
+| Method/Property | Type | Description |
+|-----------------|------|-------------|
+| `T` | `function` | Translation function |
+| `setLocale` | `function` | Change current locale |
+| `locale` | `string` | Current locale code |
+
+## Best Practices
+
+1. Keep translation keys hierarchical and meaningful
+2. Use pluralization for countable items
+3. Implement gender-aware translations where applicable
+4. Leverage TypeScript for type-safe translations
+5. Regularly update and sync translation files across languages
+
+## License
+
+intl-react is MIT licensed. See [LICENSE](LICENSE.md) for details.

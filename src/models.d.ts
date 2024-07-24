@@ -1,16 +1,15 @@
-export interface TProps {
-    children: React.ReactNode;
+export interface IntlProps {
     languages: Record<string, any>;
     defaultLanguage: string;
     detectBrowserLanguage?: boolean;
 }
-export interface TContext {
+export interface IntlContext {
     locale: string;
     setLocale: (language: string) => void;
     languages: Record<string, any>;
     defaultLanguage: string;
 }
-export type TrContext = Omit<TContext, "setLocale">;
+export type TrContext = Omit<IntlContext, "setLocale">;
 type KeyPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 type Suffix = "zero" | "one" | "two" | "few" | "many" | "female" | "male";
 type DynamicSuffix = Partial<Record<Suffix, string>>;
@@ -22,7 +21,7 @@ export type TParams = {
     [key: string]: any;
 };
 export type Autocomplete<schema> = KeyPath<schema>;
-export interface UseT extends TContext {
+export interface UseTranslation extends IntlContext {
     T: <Key extends string, Params extends TParams>(key: Key, params?: Params) => string;
 }
 export {};

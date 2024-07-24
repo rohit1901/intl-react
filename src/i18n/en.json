@@ -1,5 +1,11 @@
 {
   "hello": "Hello",
+  "missing": {
+    "key": "This key is missing in the 'de' translation file"
+  },
+  "fallback": {
+    "valid": "This key is missing in the 'de' translation file but the fallback is working"
+  },
   "feedback": {
     "error": "The connection failed",
     "success": "The connection succeeded"
