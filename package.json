@@ -15,7 +15,18 @@
     "version:major": "npm version major"
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "keywords": [
+    "i18n",
+    "internationalization",
+    "react",
+    "localization",
+    "typescript",
+    "vite",
+    "library"
   ],
   "main": "./dist/localize-react.umd.js",
   "module": "./dist/localize-react.es.js",
