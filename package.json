@@ -19,6 +19,7 @@
     "LICENSE.md",
     "README.md"
   ],
+  "license": "MIT",
   "keywords": [
     "i18n",
     "internationalization",
