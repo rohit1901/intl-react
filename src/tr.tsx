@@ -1,4 +1,4 @@
-import {TParams, TrContext} from "./models.ts";
+import {TParams, TrContext} from "./models";
 
 /**
  * Get the plural form based on the count and locale
