@@ -23,5 +23,10 @@ export default defineConfig({
     plugins: [react(), dts({
         insertTypesEntry: true,
         outDir: 'dist/types',
-    })]
+    })],
+    resolve: {
+        alias: {
+            "@": path.resolve(__dirname, "./src"),
+        },
+    },
 });
