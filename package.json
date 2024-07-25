@@ -15,9 +15,7 @@
     "version:major": "npm version major"
   },
   "files": [
-    "dist",
-    "LICENSE.md",
-    "README.md"
+    "dist"
   ],
   "license": "MIT",
   "keywords": [

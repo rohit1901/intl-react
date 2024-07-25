@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import {IntlReact} from "../src/t";
+import {IntlReact} from "../src";
 import en from "../src/i18n/en.json";
 import de from "../src/i18n/de.json";
 import ExampleApp from "./example.app";
