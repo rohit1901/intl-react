@@ -26,5 +26,16 @@
     "zero": "You don't have new messages",
     "one": "You have 1 message",
     "many": "You have __count__ messages"
+  },
+  "date": "2012-01-01",
+  "date-utc": "2019-01-01T00:00:00.000Z",
+  "dates" : {
+    "simple": "2022-01-01",
+    "complex": "2022-01-01T00:00:00.000Z",
+    "parameter": "The date is __date__",
+    "nested": {
+      "simple": "2022-01-01",
+      "complex": "2022-01-01T00:00:00.000Z"
+    }
   }
 }

@@ -20,5 +20,15 @@
       "zero": "Du hast keine neuen Nachrichten",
       "one": "Du hast 1 Nachricht",
       "many": "Du hast __count__ Nachrichten"
+  },
+  "date": "2012-01-01",
+  "date-utc": "2019-01-01T00:00:00.000Z",
+  "dates" : {
+    "simple": "2022-01-01",
+    "complex": "2022-01-01T00:00:00.000Z",
+    "nested": {
+      "simple": "2022-01-01",
+      "complex": "2022-01-01T00:00:00.000Z"
+    }
   }
 }

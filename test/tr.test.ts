@@ -98,4 +98,24 @@ describe("tr function extended tests", () => {
     const result = tr(contextDe, "message-count", { count: "five" }); // 'count' should be a number
     expect(result).toBe("Du hast five Nachrichten"); // Shows how the function handles incorrect types
   });
+
+  // Dates
+  it("handles dates in translations", () => {
+    const result = tr(contextDe, "dates.simple");
+    expect(result).toBe("1.1.2022");
+  });
+  it("handles nested dates in translations", () => {
+    const result = tr(contextDe, "dates.nested.simple");
+    expect(result).toBe("1.1.2022");
+  });
+  it("handles complex nested dates in translations", () => {
+    const result = tr(contextDe, "dates.nested.complex");
+    expect(result).toBe("1.1.2022");
+  });
+  it("handles parameters in dates", () => {
+    const result = tr(contextDe, "dates.parameter", {
+      date: new Date("2022-01-01").toDateString(),
+    });
+    expect(result).toBe(`The date is ${new Date("2022-01-01").toDateString()}`);
+  });
 });

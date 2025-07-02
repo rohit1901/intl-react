@@ -5,6 +5,7 @@
 ## Features
 
 - 🌐 Automatic browser language detection
+- 📅 Dates support
 - 🔢 Smart plural rules for any language
 - 🔄 Dynamic translations with multiple keys
 - 🗂️ Deep nested key access in JSON translation files

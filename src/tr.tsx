@@ -1,4 +1,4 @@
-import {TParams, TrContext} from "./models";
+import { IntlContext, LanguageType } from "./t";
 
 /**
  * Get the plural form based on the count and locale
@@ -15,6 +15,12 @@ const getPlural = (count: number, locale: string): string => {
     return pluralRules.select(count);
 };
 
+export type TrContext = Omit<IntlContext, "setLocale">;
+export type TParams = {
+    count?: number;
+    [key: string]: number | string | undefined;
+};
+
 /**
  * Translate the key to the corresponding translation
  * @param locale {string} - The current locale
@@ -26,11 +32,22 @@ const getPlural = (count: number, locale: string): string => {
 export function tr<Key extends string, Params extends TParams>(
     { locale, languages, defaultLanguage }: TrContext,
     key: Key,
-    params?: Params
+    params?: Params,
 ): string {
     const currentLocale = !languages[locale] ? defaultLanguage : locale;
-    const modifiedKey: string = modifyKeyForPluralAndGender(key, currentLocale, params);
-    let [result, translationFound] = navigateThroughKeys(languages, modifiedKey, currentLocale);
+    const modifiedKey: string = modifyKeyForPluralAndGender(
+        key,
+        currentLocale,
+        params,
+    );
+    // NOTE: Ugly hack to fix the type error. Will be refactored in the future.
+    const keyNavigation = navigateThroughKeys(
+        languages,
+        modifiedKey,
+        currentLocale,
+    );
+    const translationFound = keyNavigation.translationFound;
+    let result = keyNavigation.result;
 
     if (!translationFound && currentLocale !== defaultLanguage) {
         result = getFallbackTranslation(languages, modifiedKey, defaultLanguage);
@@ -55,16 +72,20 @@ export function tr<Key extends string, Params extends TParams>(
  * @param locale {string} - The current locale
  * @param params {TParams} - The parameters to replace in the translation
  */
-function modifyKeyForPluralAndGender<Key extends string, Params extends TParams>(
-    key: Key,
-    locale: string,
-    params?: Params,
-): string {
+function modifyKeyForPluralAndGender<
+    Key extends string,
+    Params extends TParams,
+>(key: Key, locale: string, params?: Params): string {
     let modifiedKey: string = key;
     // NOTE: count could be 0, so we need to check if it's not undefined
     if (params?.count !== undefined) {
         const pluralForm = getPlural(params.count, locale);
-        modifiedKey += params.count === 0 ? ".zero" : pluralForm === "other" ? ".many" : `.${pluralForm}`;
+        modifiedKey +=
+            params.count === 0
+                ? ".zero"
+                : pluralForm === "other"
+                    ? ".many"
+                    : `.${pluralForm}`;
     }
     if (params?.gender) {
         modifiedKey += params.gender === "m" ? ".male" : ".female";
@@ -72,13 +93,22 @@ function modifyKeyForPluralAndGender<Key extends string, Params extends TParams>
     return modifiedKey;
 }
 
+export type KeyNavigation = {
+    result: string;
+    translationFound: boolean;
+};
+
 /**
  * Function to navigate through the keys to get the translation
  * @param languages {any} - The languages object
  * @param key {string} - The key to translate
  * @param locale {string} - The current locale
  */
-function navigateThroughKeys<Key extends string>(languages: any, key: Key, locale: string): [string, boolean] {
+function navigateThroughKeys<Key extends string>(
+    languages: LanguageType,
+    key: Key,
+    locale: string,
+): KeyNavigation {
     let result = languages[locale];
     let translationFound = false;
     key.split(".").forEach((k: string) => {
@@ -86,11 +116,14 @@ function navigateThroughKeys<Key extends string>(languages: any, key: Key, local
             result = result[k];
             translationFound = true;
         } else {
-            result = null;
+            result = undefined;
             translationFound = false;
         }
     });
-    return [typeof result === "string" ? result : "", translationFound];
+    return {
+        result: result ? convertDateToLocaleDateString(result.toString(), locale) : "",
+        translationFound,
+    };
 }
 
 /**
@@ -100,10 +133,22 @@ function navigateThroughKeys<Key extends string>(languages: any, key: Key, local
  * @param defaultLanguage {string} - The default language
  */
 function getFallbackTranslation<Key extends string>(
-    languages: any,
+    languages: LanguageType,
     key: Key,
-    defaultLanguage: string
+    defaultLanguage: string,
 ): string {
-    const [result, _] = navigateThroughKeys(languages, key, defaultLanguage);
+    const { result } = navigateThroughKeys(languages, key, defaultLanguage);
     return result;
+}
+function isConvertibleToDate(value: unknown): value is string {
+    return typeof value === "string" || typeof value === "number" || value instanceof Date;
+}
+function isDate(value: unknown): value is Date {
+    if (!isConvertibleToDate(value)) return false;
+    const convertedValue = new Date(value);
+    return !isNaN(convertedValue.getTime());
+}
+function convertDateToLocaleDateString(value: unknown, locale: string): string {
+    if (!isDate(value)) return value as string;
+    return new Date(value).toLocaleDateString(locale);
 }
