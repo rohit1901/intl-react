@@ -1,7 +1,12 @@
 {
   "name": "intl-react",
-  "version": "4.0.5",
+  "version": "6.0.0",
   "type": "module",
+  "author": {
+    "email": "rohit.khanduri@hotmail.com",
+    "name": "Rohit Khanduri",
+    "url": "https://www.rohit.khanduri.de"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -17,6 +22,8 @@
   "files": [
     "dist"
   ],
+  "types": "./dist/types/index.d.ts",
+  "typings": "./dist/types/index.d.ts",
   "license": "MIT",
   "keywords": [
     "i18n",
@@ -27,12 +34,13 @@
     "vite",
     "library"
   ],
-  "main": "./dist/localize-react.umd.js",
-  "module": "./dist/localize-react.es.js",
+  "main": "./dist/intl-react.umd.js",
+  "module": "./dist/intl-react.es.js",
   "exports": {
     ".": {
-      "import": "./dist/localize-react.es.js",
-      "require": "./dist/localize-react.umd.js"
+      "import": "./dist/intl-react.es.js",
+      "require": "./dist/intl-react.umd.js",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "devDependencies": {
